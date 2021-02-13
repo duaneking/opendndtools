@@ -32,6 +32,16 @@ namespace quest
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "quest", Version = "v1" });
             });
+
+            services.AddIdentityServer()
+                .AddDeveloperSigningCredential()
+                .AddInMemoryIdentityResources(Config.IdentityResources)
+                .AddInMemoryClients(Config.Clients)
+                .AddInMemoryApiScopes(Config.ApiScopes);
+
+                // Later.
+                //.AddInMemoryApiResources(Config.Apis)
+                // .AddTestUsers(TestUsers.Users);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +53,12 @@ namespace quest
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "quest v1"));
             }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+            }
+
+            app.UseIdentityServer();
 
             app.UseHttpsRedirection();
 
